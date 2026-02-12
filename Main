@@ -15,35 +15,42 @@ public class Main {
             System.out.println("1 Add Expense");
             System.out.println("2 Set Spending Limit");
             System.out.println("3 View Total Spending");
+            System.out.println("4 View Report");
             System.out.println("0 Exit");
             System.out.print("Choice: ");
 
             String choice = sc.nextLine();
-
+            int expensesadded = 0;
+            int spendover = 0;
             if (choice.equals("1")) {
+
                 System.out.print("Enter amount: ");
                 double amount = Double.parseDouble(sc.nextLine());
+                expensesadded ++;
                 expenses.add(amount);
 
                 double total = getTotal();
 
-                if (spendingLimit > 0 && total > spendingLimit) {
+                if (spendingLimit > 0 && total > spendingLimit) { //connects to 2
                     System.out.println("WARNING: You have exceeded your spending limit!");
+                    spendover += 1;
                 }
-            }
-
-            else if (choice.equals("2")) {
+            } else if (choice.equals("2")) {
                 System.out.print("Enter limit: ");
                 spendingLimit = Double.parseDouble(sc.nextLine());
-            }
-
-            else if (choice.equals("3")) {
+            } else if (choice.equals("3")) {
                 System.out.println("Total spent: $" + getTotal());
+            } else if (choice.equals("0")) {
+                isrunning = false;
+            }  else if (choice.equals("4")) {
+                System.out.println("Number of expenses added: " + expensesadded);
+                System.out.println("Number of times spending limit exceeded" + spendover);
+                //make some sort of graph here, use UI, monthly tracker
             }
 
-            else if (choice.equals("0")) {
-                isrunning = false;
-            }
+
+
+
         }
 
         sc.close();
@@ -60,6 +67,6 @@ public class Main {
         return total;
     }
 
-    
+    //fileIO here, some functionability to open up graphs like UI
 
 }
