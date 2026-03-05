@@ -1,3 +1,4 @@
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -5,59 +6,87 @@ public class Main {
 
     static ArrayList<Double> expenses = new ArrayList<>();
     static double spendingLimit = 0;
+    static String FILE_NAME = "expenses.txt";
+    static int expensesadded = 0;
+    static int spendover = 0;
 
     public static void main(String[] args) {
+
         Scanner sc = new Scanner(System.in);
+
+        saveexpenses(); // load previous expenses from file
+
         boolean isrunning = true;
 
         while (isrunning) {
+
             System.out.println("Welcome Urvi. Enter your selection below:");
             System.out.println("1 Add Expense");
             System.out.println("2 Set Spending Limit");
             System.out.println("3 View Total Spending");
             System.out.println("4 View Report");
+            System.out.println("5 Graphic Report");
             System.out.println("0 Exit");
             System.out.print("Choice: ");
 
             String choice = sc.nextLine();
-            int expensesadded = 0;
-            int spendover = 0;
+
             if (choice.equals("1")) {
 
                 System.out.print("Enter amount: ");
                 double amount = Double.parseDouble(sc.nextLine());
-                expensesadded ++;
+
+                expensesadded++;
                 expenses.add(amount);
+
+                saving(); // save after adding
 
                 double total = getTotal();
 
-                if (spendingLimit > 0 && total > spendingLimit) { //connects to 2
+                if (spendingLimit > 0 && total > spendingLimit) {
                     System.out.println("WARNING: You have exceeded your spending limit!");
-                    spendover += 1;
+                    spendover++;
                 }
-            } else if (choice.equals("2")) {
+
+            }
+            else if (choice.equals("2")) {
+
                 System.out.print("Enter limit: ");
                 spendingLimit = Double.parseDouble(sc.nextLine());
-            } else if (choice.equals("3")) {
-                System.out.println("Total spent: $" + getTotal());
-            } else if (choice.equals("0")) {
-                isrunning = false;
-            }  else if (choice.equals("4")) {
-                System.out.println("Number of expenses added: " + expensesadded);
-                System.out.println("Number of times spending limit exceeded" + spendover);
-                //make some sort of graph here, use UI, monthly tracker
+
             }
+            else if (choice.equals("3")) {
 
+                System.out.println("Total spent: $" + getTotal());
 
+            }
+            else if (choice.equals("4")) {
 
+                System.out.println("Number of expenses added: " + expensesadded);
+                System.out.println("Number of times spending limit exceeded: " + spendover);
 
+            }
+            else if (choice.equals("0")) {
+
+                isrunning = false;
+
+            }
+            else if (choice.equals("5")) {
+                //graph(); 
+            }
+            else {
+
+                System.out.println("Invalid choice.");
+
+            }
         }
 
         sc.close();
     }
 
-    //finds total expenses
+    // finds total expenses
     public static double getTotal() {
+
         double total = 0;
 
         for (double e : expenses) {
@@ -67,6 +96,42 @@ public class Main {
         return total;
     }
 
-    //fileIO here, some functionability to open up graphs like UI
+    // saves expenses to file
+    public static void saving() {
 
+        try{
+
+            PrintWriter writer = new PrintWriter(new FileWriter(FILE_NAME));
+
+            for (double e : expenses) {
+                writer.println(e);
+            }
+
+            writer.close();
+
+        } catch (IOException e) {
+
+            System.out.println("Error saving file.");
+
+        }
+    }
+
+    // loads expenses from file
+    public static void saveexpenses() throws FileNotFoundException {
+        File file = new File(FILE_NAME);
+
+        if (file.exists()) {
+            Scanner input = new Scanner(file);
+            while (input.hasNextLine()) {
+
+                String line = input.nextLine();
+                double amount = Double.parseDouble(line);
+                expenses.add(amount);
+            }
+            input.close();
+        }
+    }
+    public static void graph() {
+        
+    }
 }
